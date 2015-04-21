@@ -1,17 +1,50 @@
 package ocedo.flinscanner;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
+
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    private ListView hostListView;
+
+    private HostListItemAdapter hostListAdapter;
+
+    private PtrFrameLayout pullToRefreshContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        hostListView = (ListView) findViewById(R.id.hostListView);
+        hostListAdapter = new HostListItemAdapter(getApplicationContext());
+        hostListView.setAdapter(hostListAdapter);
+
+        pullToRefreshContainer = (PtrFrameLayout) findViewById(R.id.pullToRefreshContainer);
+
+        pullToRefreshContainer.setPtrHandler(new PtrHandler() {
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View content, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, content, header);
+            }
+
+            @Override
+            public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
+                HostListItem item = new HostListItem("Localhost", "127.0.0.1");
+                hostListAdapter.addItem(item);
+
+                pullToRefreshContainer.refreshComplete();
+            }
+        });
     }
 
 
