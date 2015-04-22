@@ -1,5 +1,7 @@
 package ocedo.flinscanner.lists;
 
+import ocedo.flinscanner.R;
+
 /**
  * Created by stefan on 21.04.15.
  */
@@ -71,5 +73,18 @@ public class HostListItem {
 
     public void setType(HOST_ITEM_TYPE type) {
         this.type = type;
+    }
+
+    public int getDrawableIDForType() {
+        switch(type) {
+            case UNKNOWN:
+                return R.drawable.charging1;
+            case DESKTOP:
+                return R.drawable.monitor2;
+            case MOBILE:
+                return R.drawable.smartphone66;
+            default:
+                return R.drawable.charging1;
+        }
     }
 }

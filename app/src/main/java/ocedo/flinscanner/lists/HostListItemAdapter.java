@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -98,6 +99,7 @@ public class HostListItemAdapter extends BaseAdapter {
         TextView hostNameTextView = (TextView) mainLayout.findViewById(R.id.hostItemNameTextView);
         TextView hostAddressTextView = (TextView) mainLayout.findViewById(R.id.hostItemIPTextView);
         TextView macAddressTextView = (TextView) mainLayout.findViewById(R.id.hostItemMACTextView);
+        ImageView typeImageView = (ImageView) mainLayout.findViewById(R.id.hostItemTypeImageView);
 
         hostNameTextView.setText(item.getHostName());
         hostAddressTextView.setText(item.getHostAddress());
@@ -109,6 +111,7 @@ public class HostListItemAdapter extends BaseAdapter {
         }
 
         macAddressTextView.setText(macAddressStringbuilder.toString());
+        typeImageView.setImageResource(item.getDrawableIDForType());
 
         return mainLayout;
     }

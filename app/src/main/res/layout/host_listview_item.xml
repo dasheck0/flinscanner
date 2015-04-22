@@ -7,7 +7,11 @@
     <ImageView
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:id="@+id/hostItemTypeImageView" />
+        android:id="@+id/hostItemTypeImageView"
+        android:src="@drawable/monitor2"
+        android:padding="8dp"
+        android:scaleType="centerCrop"
+        android:cropToPadding="false" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -23,7 +27,8 @@
             android:text="Hostname"
             android:id="@+id/hostItemNameTextView"
             android:textColor="#ff000000"
-            android:textColorHighlight="#ff000000" />
+            android:textColorHighlight="#ff000000"
+            android:textStyle="bold" />
 
         <GridLayout
             android:layout_width="match_parent"

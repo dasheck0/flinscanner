@@ -111,6 +111,12 @@ public class ScanNetworkTask extends AsyncTask<Integer, Integer, HostListItem> {
     private void addHostListItem(final InetAddress address) {
         final HostListItem item = new HostListItem(address.getHostName(), address.getHostAddress());
 
+        if(address.getHostName().startsWith("android")) {
+            item.setType(HostListItem.HOST_ITEM_TYPE.MOBILE);
+        } else {
+            item.setType(HostListItem.HOST_ITEM_TYPE.DESKTOP);
+        }
+
         if (macAddresses != null) {
             if (macAddresses.containsKey(address.getHostAddress())) {
                 item.setHardwareAddress(macAddresses.get(address.getHostAddress()));
