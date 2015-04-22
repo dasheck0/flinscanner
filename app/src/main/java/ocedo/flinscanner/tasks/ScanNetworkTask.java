@@ -101,7 +101,7 @@ public class ScanNetworkTask extends AsyncTask<String, Integer, HostListItem> {
     }
 
     private void addHostListItem(final InetAddress address) {
-        final HostListItem item = new HostListItem(address.getHostName(), address.getHostAddress());
+        final HostListItem item = new HostListItem(adapter, address.getHostName(), address.getHostAddress());
 
         if (address.getHostName().startsWith("android")) {
             item.setType(HostListItem.HOST_ITEM_TYPE.MOBILE);
@@ -110,6 +110,9 @@ public class ScanNetworkTask extends AsyncTask<String, Integer, HostListItem> {
         }
 
         item.setHardwareAddress(RetrieveMacAddressListTask.getHardwareAddressFromIP(item.getHostAddress()));
+        if(item.getHardwareAddress() != RetrieveMacAddressListTask.DEFAULT_MAC) {
+            RetrieveMacAddressListTask.getVendorFromMacAddress(item);
+        }
 
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override

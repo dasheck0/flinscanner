@@ -1,6 +1,8 @@
 package ocedo.flinscanner.rest.service;
 
-import ocedo.flinscanner.rest.model.VendorList;
+import java.util.List;
+
+import ocedo.flinscanner.rest.model.Vendor;
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -12,5 +14,5 @@ public interface MacVendorLookupAPIService {
 
     @GET("/{mac-address}")
     public void getVendorFromHardwareAddress(@Path("mac-address") String mac_address,
-                                             Callback<VendorList> callback);
+                                             Callback<List<Vendor>> callback);
 }

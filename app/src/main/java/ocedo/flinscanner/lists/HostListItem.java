@@ -35,7 +35,10 @@ public class HostListItem {
 
     private LIFE_STATE state;
 
-    public HostListItem(String hostName, String hostAddress) {
+    private HostListItemAdapter adapter;
+
+    public HostListItem(HostListItemAdapter adapter, String hostName, String hostAddress) {
+        this.adapter = adapter;
         this.hostName = hostName;
         this.hostAddress = hostAddress;
 
@@ -44,6 +47,10 @@ public class HostListItem {
 
         type = HOST_ITEM_TYPE.UNKNOWN;
         state = LIFE_STATE.UNKNOWN;
+    }
+
+    public HostListItemAdapter getAdapter() {
+        return adapter;
     }
 
     public String getHostName() {
@@ -76,6 +83,7 @@ public class HostListItem {
 
     public void setVendor(String vendor) {
         this.vendor = vendor;
+
     }
 
     public HOST_ITEM_TYPE getType() {
