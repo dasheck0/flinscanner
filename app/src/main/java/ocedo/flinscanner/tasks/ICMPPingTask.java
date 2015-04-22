@@ -1,8 +1,11 @@
 package ocedo.flinscanner.tasks;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -27,19 +30,36 @@ public class ICMPPingTask extends AsyncTask<String, Void, Boolean> {
 
     private LinearLayout mainLayout;
 
-    public ICMPPingTask(HostListItem item, LinearLayout mainLayout) {
+    private ProgressDialog dialog;
+
+    private Context context;
+
+    public ICMPPingTask(Context context, HostListItem item, LinearLayout mainLayout) {
+        this.context = context;
         this.item = item;
         this.mainLayout = mainLayout;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+
+        dialog = new ProgressDialog(context);
+        dialog.setMessage("ICMP pinging " + item.getHostAddress());
+        dialog.show();
     }
 
     @Override
     protected void onPostExecute(Boolean aBoolean) {
         super.onPostExecute(aBoolean);
 
+        dialog.dismiss();
+
         if(item.getState() == HostListItem.LIFE_STATE.A_LIVE) {
             mainLayout.setBackgroundColor(Color.parseColor(SUCCESS_COLOR));
         } else if(item.getState() == HostListItem.LIFE_STATE.DEAD) {
             mainLayout.setBackgroundColor(Color.parseColor(FAILURE_COLOR));
+            Toast.makeText(context, "Ping timeout for " + item.getHostAddress(), Toast.LENGTH_SHORT).show();
         } else {
             mainLayout.setBackgroundColor(Color.parseColor(DEFAULT_COLOR));
         }

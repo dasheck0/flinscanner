@@ -48,7 +48,7 @@ public class MainActivity extends ActionBarActivity {
 
         progressBar = (ProgressBar) progressBarLayout.findViewById(R.id.progressBar);
 
-        hostListAdapter = new HostListItemAdapter(getApplicationContext());
+        hostListAdapter = new HostListItemAdapter(MainActivity.this);
         hostListView.setAdapter(hostListAdapter);
 
         pullToRefreshContainer = (PtrFrameLayout) findViewById(R.id.pullToRefreshContainer);

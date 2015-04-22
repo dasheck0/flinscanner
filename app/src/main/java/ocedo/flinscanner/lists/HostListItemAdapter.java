@@ -103,6 +103,7 @@ public class HostListItemAdapter extends BaseAdapter {
         TextView hostNameTextView = (TextView) mainLayout.findViewById(R.id.hostItemNameTextView);
         TextView hostAddressTextView = (TextView) mainLayout.findViewById(R.id.hostItemIPTextView);
         TextView macAddressTextView = (TextView) mainLayout.findViewById(R.id.hostItemMACTextView);
+        TextView vendorTextView = (TextView) mainLayout.findViewById(R.id.hostItemVendorTextView);
         ImageButton typeImageButton = (ImageButton) mainLayout.findViewById(R.id.hostItemTypeImageButton);
 
         final LinearLayout finalMainLayout = mainLayout;
@@ -110,21 +111,15 @@ public class HostListItemAdapter extends BaseAdapter {
         typeImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ICMPPingTask task = new ICMPPingTask(item, finalMainLayout);
+                ICMPPingTask task = new ICMPPingTask(context, item, finalMainLayout);
                 task.execute(item.getHostAddress());
             }
         });
 
         hostNameTextView.setText(item.getHostName());
         hostAddressTextView.setText(item.getHostAddress());
-
-        StringBuilder macAddressStringbuilder = new StringBuilder();
-        macAddressStringbuilder.append(item.getHardwareAddress());
-        if(!item.getVendor().equals("")) {
-            macAddressStringbuilder.append("( " + item.getVendor() + " )");
-        }
-
-        macAddressTextView.setText(macAddressStringbuilder.toString());
+        macAddressTextView.setText(item.getHardwareAddress());
+        vendorTextView.setText(item.getVendor());
         typeImageButton.setImageResource(item.getDrawableIDForType());
 
         return mainLayout;
