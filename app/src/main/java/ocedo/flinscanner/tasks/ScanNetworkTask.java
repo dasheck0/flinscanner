@@ -1,10 +1,12 @@
 package ocedo.flinscanner.tasks;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -18,7 +20,7 @@ import ocedo.flinscanner.lists.HostListItemAdapter;
 /**
  * Created by stefan on 21.04.15.
  */
-public class ScanNetworkTask extends AsyncTask<Integer, Integer, HostListItem> {
+public class ScanNetworkTask extends AsyncTask<String, Integer, HostListItem> {
 
     private HostListItemAdapter adapter;
 
@@ -28,16 +30,16 @@ public class ScanNetworkTask extends AsyncTask<Integer, Integer, HostListItem> {
 
     private HashMap<String, String> macAddresses;
 
-    private int index;
+    private Context context;
 
-    public ScanNetworkTask(HostListItemAdapter adapter,
+    public ScanNetworkTask(Context context,
+                           HostListItemAdapter adapter,
                            PtrFrameLayout pullToRefreshContainer,
                            ProgressBar progressBar) {
+        this.context = context;
         this.adapter = adapter;
         this.pullToRefreshContainer = pullToRefreshContainer;
         this.progressBar = progressBar;
-
-        this.index = -1;
     }
 
     @Override
@@ -58,31 +60,21 @@ public class ScanNetworkTask extends AsyncTask<Integer, Integer, HostListItem> {
     protected void onPostExecute(HostListItem hostListItem) {
         super.onPostExecute(hostListItem);
 
-        if(index >= 255) {
-            progressBar.setVisibility(View.GONE);
-            pullToRefreshContainer.refreshComplete();
+        progressBar.setVisibility(View.GONE);
+        pullToRefreshContainer.refreshComplete();
+
+        if(adapter.getCount() == 0) {
+            Toast.makeText(context, "The search is complete, but no hosts were found.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "The search is complete.", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    protected HostListItem doInBackground(Integer... params) {
-        /*macAddresses = retrieveMacAdressList();
+    protected HostListItem doInBackground(String... params) {
+        String subnet = params[0];
 
-        Iterator it = macAddresses.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
-            Log.d("TAG", pair.getKey() + " : " + pair.getValue());
-        }*/
-
-        int startAddress = params[0];
-        int endAddress = params[1];
-
-
-        String subnet = "192.168.2.";
-       // resetHostListItemAdapter();
-
-        for (int i = startAddress; i < endAddress; i++) {
-            index = i;
+        for (int i = 0; i < 255; i++) {
             publishProgress(i);
 
             if (isCancelled()) {
@@ -90,9 +82,8 @@ public class ScanNetworkTask extends AsyncTask<Integer, Integer, HostListItem> {
             }
 
             try {
-                InetAddress addr = InetAddress.getByName(subnet + String.valueOf(i));
 
-                //Log.d("TAG", addr.getHostAddress() + ", " + addr.getCanonicalHostName() + ", " + addr.getHostName());
+                InetAddress addr = InetAddress.getByName(subnet + String.valueOf(i));
 
                 if (addr.getHostName() != null && !addr.getHostName().equals(addr.getHostAddress())) {
                     addHostListItem(addr);
@@ -112,7 +103,7 @@ public class ScanNetworkTask extends AsyncTask<Integer, Integer, HostListItem> {
     private void addHostListItem(final InetAddress address) {
         final HostListItem item = new HostListItem(address.getHostName(), address.getHostAddress());
 
-        if(address.getHostName().startsWith("android")) {
+        if (address.getHostName().startsWith("android")) {
             item.setType(HostListItem.HOST_ITEM_TYPE.MOBILE);
         } else {
             item.setType(HostListItem.HOST_ITEM_TYPE.DESKTOP);
