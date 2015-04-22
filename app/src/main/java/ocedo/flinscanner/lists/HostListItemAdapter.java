@@ -1,11 +1,12 @@
 package ocedo.flinscanner.lists;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ocedo.flinscanner.R;
+import ocedo.flinscanner.tasks.ICMPPingTask;
 
 /**
  * Created by stefan on 21.04.15.
@@ -86,7 +88,7 @@ public class HostListItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        HostListItem item = getItem(i);
+        final HostListItem item = getItem(i);
 
         LinearLayout mainLayout = null;
 
@@ -96,10 +98,22 @@ public class HostListItemAdapter extends BaseAdapter {
             mainLayout = (LinearLayout) view;
         }
 
+        mainLayout.setBackgroundColor(Color.parseColor(ICMPPingTask.DEFAULT_COLOR));
+
         TextView hostNameTextView = (TextView) mainLayout.findViewById(R.id.hostItemNameTextView);
         TextView hostAddressTextView = (TextView) mainLayout.findViewById(R.id.hostItemIPTextView);
         TextView macAddressTextView = (TextView) mainLayout.findViewById(R.id.hostItemMACTextView);
-        ImageView typeImageView = (ImageView) mainLayout.findViewById(R.id.hostItemTypeImageView);
+        ImageButton typeImageButton = (ImageButton) mainLayout.findViewById(R.id.hostItemTypeImageButton);
+
+        final LinearLayout finalMainLayout = mainLayout;
+
+        typeImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ICMPPingTask task = new ICMPPingTask(item, finalMainLayout);
+                task.execute(item.getHostAddress());
+            }
+        });
 
         hostNameTextView.setText(item.getHostName());
         hostAddressTextView.setText(item.getHostAddress());
@@ -111,7 +125,7 @@ public class HostListItemAdapter extends BaseAdapter {
         }
 
         macAddressTextView.setText(macAddressStringbuilder.toString());
-        typeImageView.setImageResource(item.getDrawableIDForType());
+        typeImageButton.setImageResource(item.getDrawableIDForType());
 
         return mainLayout;
     }

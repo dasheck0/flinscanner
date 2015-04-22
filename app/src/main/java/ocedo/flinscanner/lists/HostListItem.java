@@ -15,6 +15,14 @@ public class HostListItem {
         NUMBER_OF_TYPES
     };
 
+    public enum LIFE_STATE {
+        UNKNOWN,
+        A_LIVE,
+        DEAD,
+
+        NUMBER_OF_STATES
+    }
+
     private String hostName;
 
     private String hostAddress;
@@ -25,6 +33,8 @@ public class HostListItem {
 
     private HOST_ITEM_TYPE type;
 
+    private LIFE_STATE state;
+
     public HostListItem(String hostName, String hostAddress) {
         this.hostName = hostName;
         this.hostAddress = hostAddress;
@@ -33,6 +43,7 @@ public class HostListItem {
         vendor = "";
 
         type = HOST_ITEM_TYPE.UNKNOWN;
+        state = LIFE_STATE.UNKNOWN;
     }
 
     public String getHostName() {
@@ -73,6 +84,14 @@ public class HostListItem {
 
     public void setType(HOST_ITEM_TYPE type) {
         this.type = type;
+    }
+
+    public LIFE_STATE getState() {
+        return state;
+    }
+
+    public void setState(LIFE_STATE state) {
+        this.state = state;
     }
 
     public int getDrawableIDForType() {
