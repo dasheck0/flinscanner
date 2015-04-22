@@ -1,4 +1,4 @@
-package ocedo.flinscanner;
+package ocedo.flinscanner.lists;
 
 /**
  * Created by stefan on 21.04.15.

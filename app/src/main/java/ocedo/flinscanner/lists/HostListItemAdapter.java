@@ -1,4 +1,4 @@
-package ocedo.flinscanner;
+package ocedo.flinscanner.lists;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ocedo.flinscanner.R;
 
 /**
  * Created by stefan on 21.04.15.
@@ -54,6 +56,11 @@ public class HostListItemAdapter extends BaseAdapter {
 
     public void removeItem(int i) {
         items.remove(i);
+        notifyDataSetChanged();
+    }
+
+    public void clear() {
+        items.clear();
         notifyDataSetChanged();
     }
 

@@ -5,11 +5,16 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
+import ocedo.flinscanner.lists.HostListItem;
+import ocedo.flinscanner.lists.HostListItemAdapter;
+import ocedo.flinscanner.tasks.ScanNetworkTask;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -20,14 +25,26 @@ public class MainActivity extends ActionBarActivity {
 
     private PtrFrameLayout pullToRefreshContainer;
 
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         hostListView = (ListView) findViewById(R.id.hostListView);
+
+        LinearLayout progressBarLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.progressbar, null, false);
+        hostListView.addHeaderView(progressBarLayout);
+
+        progressBar = (ProgressBar) progressBarLayout.findViewById(R.id.progressBar);
+       // progressBar.setVisibility(View.GONE);
+
         hostListAdapter = new HostListItemAdapter(getApplicationContext());
         hostListView.setAdapter(hostListAdapter);
+
+        HostListItem item = new HostListItem("Localhost", "127.0.0.1");
+        hostListAdapter.addItem(item);
 
         pullToRefreshContainer = (PtrFrameLayout) findViewById(R.id.pullToRefreshContainer);
 
@@ -39,10 +56,8 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
-                HostListItem item = new HostListItem("Localhost", "127.0.0.1");
-                hostListAdapter.addItem(item);
-
-                pullToRefreshContainer.refreshComplete();
+                ScanNetworkTask task = new ScanNetworkTask(hostListAdapter, pullToRefreshContainer, progressBar);
+                task.execute(0);
             }
         });
     }
